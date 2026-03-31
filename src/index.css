@@ -24,12 +24,22 @@
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  display: block;
   min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body::before,
@@ -58,11 +68,11 @@ body::after {
 }
 
 #root {
-  max-width: 1100px;
+  max-width: none;
   width: 100%;
-  margin: 0 auto;
-  padding: 1.2rem 1rem 2rem;
-  text-align: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 button {

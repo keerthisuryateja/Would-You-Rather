@@ -255,21 +255,15 @@ function App() {
   }, [currentQuestion])
 
   return (
-    <div className="bg-background font-body text-on-background min-h-screen flex flex-col overflow-x-hidden">
+    <div className="bg-background font-body text-on-background h-screen w-screen flex flex-col overflow-hidden">
       {/* TopAppBar */}
-      <header className="flex justify-between items-center w-full px-3 sm:px-6 py-3 sm:py-4 fixed top-0 z-50 bg-blue-600 dark:bg-blue-700 shadow-[0px_4px_20px_rgba(8,70,237,0.3)]">
+      <header className="flex justify-between items-center w-full px-3 sm:px-6 h-16 sm:h-20 fixed top-0 z-50 bg-blue-600 dark:bg-blue-700 shadow-[0px_4px_20px_rgba(8,70,237,0.3)]">
         <div className="flex items-center gap-2 sm:gap-4">
           <span className="text-yellow-400 dark:text-yellow-300 italic font-black text-xl sm:text-3xl tracking-tighter drop-shadow-[4px_4px_0px_rgba(0,0,0,0.15)] font-headline">
             WYR?
           </span>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
-          <button className="flex items-center gap-1 sm:gap-2 bg-blue-700 px-2 sm:px-4 py-2 rounded-full text-white/90 font-label text-xs sm:text-sm border-2 border-white/20 hover:scale-105 transition-transform">
-            <span className="material-symbols-outlined text-yellow-400 hidden sm:inline-block" style={{fontSize: '20px'}}>
-              emoji_events
-            </span>
-            <span className="tracking-widest text-xs sm:text-sm">420</span>
-          </button>
           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 sm:border-4 border-yellow-400 overflow-hidden shadow-[2px_2px_0px_#000] sm:shadow-[4px_4px_0px_#000] hover:scale-105 hover:rotate-2 transition-transform cursor-pointer">
             <div className="w-full h-full bg-primary-container flex items-center justify-center text-white font-bold text-xs sm:text-sm" title="Profile">
               P1
@@ -279,9 +273,9 @@ function App() {
         <div className="absolute bottom-0 left-0 bg-blue-700 dark:bg-blue-800 h-1 w-full"></div>
       </header>
 
-      <main className="flex-grow pt-20 sm:pt-24 pb-32 px-3 sm:px-6 max-w-6xl mx-auto w-full flex flex-col">
+      <main className="mt-16 sm:mt-20 mb-24 sm:mb-28 px-3 sm:px-6 max-w-6xl mx-auto w-full h-[calc(100vh-10rem)] sm:h-[calc(100vh-12rem)] flex flex-col overflow-hidden">
         {/* Game Controls Row */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-10 mt-2 sm:mt-4 gap-4 sm:gap-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 mt-1 sm:mt-2 gap-3 sm:gap-0">
           <div className="flex flex-col">
             <span className="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">
               Daily Challenge
@@ -341,12 +335,12 @@ function App() {
         ) : (
           <>
             {/* Choice Arena */}
-            <div className="flex flex-col lg:flex-row gap-3 sm:gap-6 relative items-center justify-center flex-grow">
+            <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 relative items-center justify-center flex-grow min-h-0">
               {/* Choice Card A */}
               <button
                 onClick={() => handleVote(1)}
                 disabled={hasVoted}
-                className="w-full lg:w-1/2 h-auto min-h-[220px] sm:min-h-[280px] bg-surface-container-lowest border-[3px] border-primary-dim rounded-2xl sm:rounded-full p-4 sm:p-8 flex flex-col items-center justify-center text-center relative group cursor-pointer hover:scale-[1.02] transition-all overflow-hidden disabled:cursor-default disabled:hover:scale-100"
+                className="w-full lg:w-1/2 h-auto min-h-[170px] sm:min-h-[230px] lg:min-h-[260px] bg-surface-container-lowest border-[3px] border-primary-dim rounded-2xl sm:rounded-full p-4 sm:p-6 flex flex-col items-center justify-center text-center relative group cursor-pointer hover:scale-[1.02] transition-all overflow-hidden disabled:cursor-default disabled:hover:scale-100"
               >
                 <div className="absolute inset-0 comic-texture text-primary opacity-[0.03] pointer-events-none"></div>
                 <div className="relative z-10 w-full">
@@ -385,7 +379,7 @@ function App() {
               <button
                 onClick={() => handleVote(2)}
                 disabled={hasVoted}
-                className="w-full lg:w-1/2 h-auto min-h-[220px] sm:min-h-[280px] bg-surface-container-lowest border-[3px] border-tertiary-dim rounded-2xl sm:rounded-full p-4 sm:p-8 flex flex-col items-center justify-center text-center relative group cursor-pointer hover:scale-[1.02] transition-all overflow-hidden disabled:cursor-default disabled:hover:scale-100"
+                className="w-full lg:w-1/2 h-auto min-h-[170px] sm:min-h-[230px] lg:min-h-[260px] bg-surface-container-lowest border-[3px] border-tertiary-dim rounded-2xl sm:rounded-full p-4 sm:p-6 flex flex-col items-center justify-center text-center relative group cursor-pointer hover:scale-[1.02] transition-all overflow-hidden disabled:cursor-default disabled:hover:scale-100"
               >
                 <div className="absolute inset-0 comic-texture text-tertiary opacity-[0.03] pointer-events-none"></div>
                 <div className="relative z-10 w-full">
@@ -415,7 +409,7 @@ function App() {
             </div>
 
             {/* Next Section */}
-            <div className="mt-6 sm:mt-10 flex flex-col items-center gap-2 sm:gap-4">
+            <div className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 sm:gap-3">
               {!hasVoted ? (
                 <button
                   onClick={() => pickRandomQuestion(questions)}
@@ -439,14 +433,14 @@ function App() {
             </div>
 
             {/* Doodle Divider */}
-            <div className="mt-12 sm:mt-20 self-start w-28 sm:w-32 h-1.5 sm:h-2 bg-tertiary rounded-full rotate-[-2deg]"></div>
-            <div className="mt-1.5 sm:mt-2 self-start w-12 sm:w-16 h-1.5 sm:h-2 bg-secondary-container rounded-full rotate-[4deg] ml-3 sm:ml-4"></div>
+            <div className="mt-3 sm:mt-4 self-start w-20 sm:w-24 h-1.5 sm:h-2 bg-tertiary rounded-full rotate-[-2deg]"></div>
+            <div className="mt-1 sm:mt-1.5 self-start w-10 sm:w-12 h-1.5 sm:h-2 bg-secondary-container rounded-full rotate-[4deg] ml-2 sm:ml-3"></div>
           </>
         )}
       </main>
 
       {/* BottomNavBar */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-2 sm:px-4 pb-4 sm:pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-4 border-blue-600/10 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] rounded-t-[1.5rem] sm:rounded-t-[2rem]">
+      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-2 sm:px-4 pb-2.5 sm:pb-4 pt-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-4 border-blue-600/10 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] rounded-t-[1.5rem] sm:rounded-t-[2rem]">
         {Object.entries(CATEGORY_META).map(([key, meta]) => {
           const isActive = activeCategory === key
           return (
