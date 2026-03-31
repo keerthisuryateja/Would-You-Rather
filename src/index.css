@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #09090b 0%, #171723 100%);
+  --option-1-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --option-2-gradient: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--text-main);
+  background: var(--bg-gradient);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+button {
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  padding: 1.2rem 2.4rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: var(--glass-bg);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-main);
+  backdrop-filter: blur(10px);
+}
+
+button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  border-color: rgba(255,255,255,0.3);
+}
+
+.title-gradient {
+  background: linear-gradient(to right, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
