@@ -15,6 +15,17 @@ const normalizeQuestion = (q) => ({
   votes_two: Number(q.votes_two ?? 0),
 })
 
+const DEMO_QUESTION_PAIRS = new Set([
+  'eat pizza forever||never eat again',
+  'be rich||be famous',
+  'never have to sleep||never have to eat',
+])
+
+const isDemoQuestion = (q) => {
+  const pair = `${(q.option_one ?? '').trim().toLowerCase()}||${(q.option_two ?? '').trim().toLowerCase()}`
+  return DEMO_QUESTION_PAIRS.has(pair)
+}
+
 function App() {
   const [questions, setQuestions] = useState([])
   const [currentQuestion, setCurrentQuestion] = useState(null)
@@ -54,14 +65,23 @@ function App() {
         setStatusMessage('No questions found in Supabase table questions.')
       } else {
         const normalized = data.map(normalizeQuestion)
-        setQuestions(normalized)
+        const liveQuestions = normalized.filter((item) => !isDemoQuestion(item))
+
+        if (liveQuestions.length === 0) {
+          setQuestions([])
+          setCurrentQuestion(null)
+          setStatusMessage('Only demo rows were found in Supabase. Replace seeded rows with your own questions.')
+          return
+        }
+
+        setQuestions(liveQuestions)
         if (preserveCurrent) {
           setCurrentQuestion((prev) => {
-            const preserved = normalized.find((item) => item.id === prev?.id)
-            return preserved ?? getRandomQuestion(normalized)
+            const preserved = liveQuestions.find((item) => item.id === prev?.id)
+            return preserved ?? getRandomQuestion(liveQuestions)
           })
         } else {
-          pickRandomQuestion(normalized)
+          pickRandomQuestion(liveQuestions)
         }
       }
     } catch (err) {
