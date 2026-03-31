@@ -1,12 +1,101 @@
 <!doctype html>
-<html lang="en">
+<html class="light" lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Would You Rather</title>
+    <title>WYR? - Daily Challenge</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space_Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-container": "#f6e600",
+              "on-error-container": "#510017",
+              "surface-container-highest": "#dfdcdc",
+              "error-container": "#f74b6d",
+              "inverse-surface": "#0e0e0e",
+              "surface-container-lowest": "#ffffff",
+              "error": "#b41340",
+              "surface-container-high": "#e4e2e1",
+              "outline": "#787676",
+              "tertiary-fixed": "#2ff801",
+              "on-error": "#ffefef",
+              "on-background": "#2f2f2e",
+              "surface-dim": "#d6d4d3",
+              "secondary-fixed-dim": "#e7d800",
+              "primary-container": "#859aff",
+              "on-primary-fixed": "#000000",
+              "primary-fixed": "#859aff",
+              "on-secondary-fixed": "#454000",
+              "background": "#f9f6f5",
+              "on-tertiary-container": "#0b5800",
+              "on-surface-variant": "#5c5b5b",
+              "surface-tint": "#0846ed",
+              "inverse-on-surface": "#9e9c9c",
+              "on-primary-fixed-variant": "#00207e",
+              "primary-dim": "#003cd3",
+              "on-primary": "#f2f1ff",
+              "surface": "#f9f6f5",
+              "surface-variant": "#dfdcdc",
+              "outline-variant": "#afadac",
+              "on-tertiary-fixed-variant": "#0d6200",
+              "tertiary": "#0f6b00",
+              "on-tertiary": "#d3ffc1",
+              "secondary-dim": "#575100",
+              "on-primary-container": "#001867",
+              "surface-container": "#eae7e7",
+              "on-secondary-container": "#595300",
+              "secondary": "#645d00",
+              "on-tertiary-fixed": "#064200",
+              "tertiary-dim": "#0c5d00",
+              "on-secondary": "#fff59b",
+              "surface-container-low": "#f3f0ef",
+              "surface-bright": "#f9f6f5",
+              "inverse-primary": "#6d88ff",
+              "tertiary-fixed-dim": "#2be800",
+              "error-dim": "#a70138",
+              "primary": "#0846ed",
+              "secondary-fixed": "#f6e600",
+              "on-surface": "#2f2f2e",
+              "primary-fixed-dim": "#718bff",
+              "on-secondary-fixed-variant": "#645d00",
+              "tertiary-container": "#2ff801"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .comic-texture {
+        background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+        background-size: 8px 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #0846ed;
+        border-radius: 10px;
+      }
+    </style>
   </head>
-  <body>
+  <body class="bg-background font-body text-on-background min-h-screen flex flex-col overflow-x-hidden custom-scrollbar">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

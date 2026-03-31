@@ -38,8 +38,8 @@ jobs:
         run: npm run lint
       - name: Build
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_URL: https://opinwqcwrelipjlnvuhl.supabase.co
+          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9waW53cWN3cmVsaXBqbG52dWhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NDMzOTksImV4cCI6MjA5MDUxOTM5OX0.5_WR3EGwYb94yIt6LIP8tLQWUPDg7V1FHWQf1lsw_Xs
         run: npm run build
 
   deploy:
@@ -61,8 +61,8 @@ jobs:
         run: npm ci
       - name: Build
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_URL: https://opinwqcwrelipjlnvuhl.supabase.co
+          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9waW53cWN3cmVsaXBqbG52dWhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NDMzOTksImV4cCI6MjA5MDUxOTM5OX0.5_WR3EGwYb94yIt6LIP8tLQWUPDg7V1FHWQf1lsw_Xs
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
