@@ -3,18 +3,17 @@ import { isSupabaseConfigured, supabase } from './supabaseClient'
 import brandLogo from './assets/would_you_rather_logo.png'
 import './App.css'
 
-const FALLBACK_QUESTIONS = [
-  { id: 1, option_one: 'Time travel to the past', option_two: 'Time travel to the future', votes_one: 120, votes_two: 85 },
-  { id: 2, option_one: 'Fly like a bird', option_two: 'Breathe underwater', votes_one: 200, votes_two: 150 },
-  { id: 3, option_one: 'Never have to sleep', option_two: 'Never have to eat', votes_one: 400, votes_two: 120 },
-  { id: 4, option_one: 'Read minds', option_two: 'Be invisible', votes_one: 310, votes_two: 290 },
-]
-
 const getRandomQuestion = (qList, excludeId = -1) => {
   let nextQuestions = qList.filter((q) => q.id !== excludeId)
   if (nextQuestions.length === 0) nextQuestions = qList
   return nextQuestions[Math.floor(Math.random() * nextQuestions.length)]
 }
+
+const normalizeQuestion = (q) => ({
+  ...q,
+  votes_one: Number(q.votes_one ?? 0),
+  votes_two: Number(q.votes_two ?? 0),
+})
 
 function App() {
   const [questions, setQuestions] = useState([])
@@ -30,34 +29,46 @@ function App() {
     setView('voting')
   }, [])
 
-  const fetchQuestions = useCallback(async () => {
+  const fetchQuestions = useCallback(async (options = { preserveCurrent: false }) => {
+    const { preserveCurrent } = options
     setLoading(true)
     setStatusMessage('')
 
     if (!isSupabaseConfigured) {
-      setQuestions(FALLBACK_QUESTIONS)
-      pickRandomQuestion(FALLBACK_QUESTIONS)
+      setQuestions([])
+      setCurrentQuestion(null)
       setLoading(false)
-      setStatusMessage('Running with local fallback questions. Configure Supabase for live data.')
+      setStatusMessage('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to run live polls.')
       return
     }
 
     try {
-      const { data, error } = await supabase.from('questions').select('*')
+      const { data, error } = await supabase
+        .from('questions')
+        .select('id, option_one, option_two, votes_one, votes_two')
+        .order('id', { ascending: true })
 
       if (error || !data || data.length === 0) {
-        setQuestions(FALLBACK_QUESTIONS)
-        pickRandomQuestion(FALLBACK_QUESTIONS)
-        setStatusMessage('No remote questions found. Showing fallback questions.')
+        setQuestions([])
+        setCurrentQuestion(null)
+        setStatusMessage('No questions found in Supabase table questions.')
       } else {
-        setQuestions(data)
-        pickRandomQuestion(data)
+        const normalized = data.map(normalizeQuestion)
+        setQuestions(normalized)
+        if (preserveCurrent) {
+          setCurrentQuestion((prev) => {
+            const preserved = normalized.find((item) => item.id === prev?.id)
+            return preserved ?? getRandomQuestion(normalized)
+          })
+        } else {
+          pickRandomQuestion(normalized)
+        }
       }
     } catch (err) {
-      console.warn('Fallback: Using local questions due to error.', err)
-      setQuestions(FALLBACK_QUESTIONS)
-      pickRandomQuestion(FALLBACK_QUESTIONS)
-      setStatusMessage('Could not reach Supabase. Showing fallback questions.')
+      console.error('Could not fetch questions.', err)
+      setQuestions([])
+      setCurrentQuestion(null)
+      setStatusMessage('Could not reach Supabase. Check URL, key, and table permissions.')
     } finally {
       setLoading(false)
     }
@@ -79,6 +90,7 @@ function App() {
     else updatedQuestion.votes_two += 1
 
     setCurrentQuestion(updatedQuestion)
+    setQuestions((prev) => prev.map((q) => (q.id === updatedQuestion.id ? updatedQuestion : q)))
 
     // Update real database if configured
     try {
@@ -97,10 +109,22 @@ function App() {
 
           if (updateError) throw updateError
         }
+
+        const { data: latestQuestion, error: latestError } = await supabase
+          .from('questions')
+          .select('id, option_one, option_two, votes_one, votes_two')
+          .eq('id', currentQuestion.id)
+          .single()
+
+        if (latestError) throw latestError
+
+        const normalizedLatest = normalizeQuestion(latestQuestion)
+        setCurrentQuestion(normalizedLatest)
+        setQuestions((prev) => prev.map((q) => (q.id === normalizedLatest.id ? normalizedLatest : q)))
       }
     } catch (e) {
       console.error('Vote update failed', e)
-      setStatusMessage('Vote sync failed. Your vote is still shown locally.')
+      setStatusMessage('Vote sync failed. Refresh to load the latest server results.')
     }
   }
 
@@ -118,17 +142,33 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="header">
-        <img className="brand-logo" src={brandLogo} alt="Would You Rather logo" />
-        <h1><span className="title-gradient">Would You</span> Rather?</h1>
-        <p>Make your choice and see what the world thinks!</p>
+      <div className="header-shell">
+        <div className="header">
+          <img className="brand-logo" src={brandLogo} alt="Would You Rather logo" />
+          <h1><span className="title-gradient">Would You</span> Rather?</h1>
+          <p>Vote live. See real community results.</p>
+        </div>
+        <div className="meta-row">
+          <span className="meta-pill">{isSupabaseConfigured ? 'Live mode' : 'Config needed'}</span>
+          <button className="refresh-btn" onClick={() => fetchQuestions({ preserveCurrent: true })}>
+            Refresh
+          </button>
+        </div>
         {statusMessage ? <p className="status-message">{statusMessage}</p> : null}
       </div>
 
       <div className="game-card">
-        {loading || !currentQuestion ? (
+        {loading ? (
           <div className="loader">
             <div className="spinner" aria-label="Loading questions" />
+          </div>
+        ) : !currentQuestion ? (
+          <div className="empty-state">
+            <h2>No live questions available</h2>
+            <p>Check your Supabase config and confirm the questions table has rows.</p>
+            <button className="next-btn" onClick={() => fetchQuestions({ preserveCurrent: false })}>
+              Try Again
+            </button>
           </div>
         ) : (
           <div className={`view ${view === 'results' ? 'view-results' : 'view-voting'}`}>

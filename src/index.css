@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
 :root {
-  --bg-gradient: linear-gradient(135deg, #09090b 0%, #171723 100%);
-  --option-1-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --option-2-gradient: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  --bg-gradient: radial-gradient(circle at 10% 5%, #fff6db 0%, transparent 32%),
+    radial-gradient(circle at 100% 20%, #dff7f7 0%, transparent 38%),
+    linear-gradient(140deg, #f6f8ff 0%, #fbfcff 48%, #eef5f8 100%);
+  --text-main: #0f172a;
+  --text-muted: #5b6b84;
+  --panel-bg: rgba(255, 255, 255, 0.86);
+  --panel-border: rgba(15, 23, 42, 0.08);
+  --panel-shadow: 0 30px 60px -30px rgba(27, 38, 66, 0.45);
+  font-family: 'Outfit', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
   color: var(--text-main);
   background: var(--bg-gradient);
 
@@ -29,38 +29,63 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  border-radius: 999px;
+  filter: blur(26px);
+}
+
+body::before {
+  width: 360px;
+  height: 360px;
+  top: -120px;
+  right: -90px;
+  background: rgba(233, 140, 75, 0.26);
+}
+
+body::after {
+  width: 400px;
+  height: 400px;
+  bottom: -180px;
+  left: -130px;
+  background: rgba(105, 172, 182, 0.25);
 }
 
 #root {
-  max-width: 1280px;
+  max-width: 1100px;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.2rem 1rem 2rem;
   text-align: center;
 }
 
 button {
-  border-radius: 16px;
-  border: 1px solid var(--glass-border);
-  padding: 1.2rem 2.4rem;
-  font-size: 1.25rem;
+  border-radius: 14px;
+  border: 1px solid #ced8e6;
+  padding: 1rem 1.4rem;
+  font-size: 1.08rem;
   font-weight: 600;
   font-family: inherit;
-  background: var(--glass-bg);
+  background: #ffffff;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
   color: var(--text-main);
-  backdrop-filter: blur(10px);
 }
 
 button:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 18px -14px rgba(0, 0, 0, 0.5);
+  border-color: #9fb0c8;
 }
 
 .title-gradient {
-  background: linear-gradient(to right, #8b5cf6, #ec4899);
+  background: linear-gradient(120deg, #17647d, #f47b31);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

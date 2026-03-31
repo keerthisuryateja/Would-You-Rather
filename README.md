@@ -6,7 +6,7 @@ Production-ready React + Vite poll app where users vote between two options and 
 
 - Clean, responsive UI with animated vote results
 - Supabase-backed live question and vote storage
-- Automatic fallback mode with local questions if Supabase is unavailable
+- Live-only polling mode (no fake local vote data)
 - CI quality checks (lint + build) on pull requests and main branch
 - GitHub Pages deployment through GitHub Actions
 
@@ -64,7 +64,13 @@ Repository Pages should be configured as:
 
 Because this is a project page, Vite base is set to `/Would-You-Rather/` in `vite.config.js`.
 
+Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as repository secrets in GitHub Actions.
+
 ## Security Notes
 
 - `.env` is ignored by git.
 - If secrets were ever committed in history, rotate them at provider level.
+
+## Setup Checklist
+
+See `SETUP_CHECKLIST.md` for the complete Supabase SQL setup, GitHub Actions variables, and verification steps.
