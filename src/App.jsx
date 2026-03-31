@@ -86,15 +86,30 @@ function App() {
 
   const applyCategoryView = useCallback((sourceQuestions, category, preserveCurrent = false) => {
     const scoped = filterQuestionsByCategory(sourceQuestions, category)
-    setQuestions(scoped)
 
     if (scoped.length === 0) {
-      setCurrentQuestion(null)
+      if (sourceQuestions.length === 0) {
+        setQuestions([])
+        setCurrentQuestion(null)
+        setHasVoted(false)
+        const categoryLabel = CATEGORY_META[category].label
+        setStatusMessage(`No ${categoryLabel} questions found. Add more rows or choose another tab.`)
+        return
+      }
+
+      setQuestions(sourceQuestions)
+      setCurrentQuestion((prev) => {
+        const preserved = sourceQuestions.find((item) => item.id === prev?.id)
+        return preserved ?? getRandomQuestion(sourceQuestions)
+      })
       setHasVoted(false)
       const categoryLabel = CATEGORY_META[category].label
-      setStatusMessage(`No ${categoryLabel} questions found. Add more rows or choose another tab.`)
+      setStatusMessage(`No ${categoryLabel} specific questions yet. Showing mixed live questions.`)
       return
     }
+
+    setQuestions(scoped)
+    setStatusMessage('')
 
     if (preserveCurrent) {
       setCurrentQuestion((prev) => {
