@@ -170,21 +170,21 @@ function App() {
   return (
     <div className="bg-background font-body text-on-background min-h-screen flex flex-col overflow-x-hidden">
       {/* TopAppBar */}
-      <header className="flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50 bg-blue-600 dark:bg-blue-700 shadow-[0px_4px_20px_rgba(8,70,237,0.3)]">
-        <div className="flex items-center gap-4">
-          <span className="text-yellow-400 dark:text-yellow-300 italic font-black text-3xl tracking-tighter drop-shadow-[4px_4px_0px_rgba(0,0,0,0.15)] font-headline">
+      <header className="flex justify-between items-center w-full px-3 sm:px-6 py-3 sm:py-4 fixed top-0 z-50 bg-blue-600 dark:bg-blue-700 shadow-[0px_4px_20px_rgba(8,70,237,0.3)]">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="text-yellow-400 dark:text-yellow-300 italic font-black text-xl sm:text-3xl tracking-tighter drop-shadow-[4px_4px_0px_rgba(0,0,0,0.15)] font-headline">
             WYR?
           </span>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 bg-blue-700 px-4 py-2 rounded-full text-white/90 font-label text-sm border-2 border-white/20 hover:scale-105 transition-transform">
-            <span className="material-symbols-outlined text-yellow-400" style={{fontSize: '20px'}}>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button className="flex items-center gap-1 sm:gap-2 bg-blue-700 px-2 sm:px-4 py-2 rounded-full text-white/90 font-label text-xs sm:text-sm border-2 border-white/20 hover:scale-105 transition-transform">
+            <span className="material-symbols-outlined text-yellow-400 hidden sm:inline-block" style={{fontSize: '20px'}}>
               emoji_events
             </span>
-            <span className="tracking-widest">420</span>
+            <span className="tracking-widest text-xs sm:text-sm">420</span>
           </button>
-          <div className="w-10 h-10 rounded-full border-4 border-yellow-400 overflow-hidden shadow-[4px_4px_0px_#000] hover:scale-105 hover:rotate-2 transition-transform cursor-pointer">
-            <div className="w-full h-full bg-primary-container flex items-center justify-center text-white font-bold" title="Profile">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 sm:border-4 border-yellow-400 overflow-hidden shadow-[2px_2px_0px_#000] sm:shadow-[4px_4px_0px_#000] hover:scale-105 hover:rotate-2 transition-transform cursor-pointer">
+            <div className="w-full h-full bg-primary-container flex items-center justify-center text-white font-bold text-xs sm:text-sm" title="Profile">
               P1
             </div>
           </div>
@@ -192,17 +192,17 @@ function App() {
         <div className="absolute bottom-0 left-0 bg-blue-700 dark:bg-blue-800 h-1 w-full"></div>
       </header>
 
-      <main className="flex-grow pt-24 pb-32 px-6 max-w-5xl mx-auto w-full flex flex-col">
+      <main className="flex-grow pt-20 sm:pt-24 pb-32 px-3 sm:px-6 max-w-6xl mx-auto w-full flex flex-col">
         {/* Game Controls Row */}
-        <div className="flex justify-between items-center mb-10 mt-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-10 mt-2 sm:mt-4 gap-4 sm:gap-0">
           <div className="flex flex-col">
             <span className="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">
               Daily Challenge
             </span>
-            <h1 className="font-headline text-4xl text-on-surface leading-none -mt-1">EPIC CHOICES!</h1>
+            <h1 className="font-headline text-2xl sm:text-4xl text-on-surface leading-none -mt-1">EPIC CHOICES!</h1>
           </div>
           <div className="flex items-center gap-3 bg-surface-container-high p-1.5 rounded-full border-2 border-on-surface/5">
-            <span className="font-label text-[10px] px-3 font-bold text-on-surface-variant uppercase">
+            <span className="font-label text-[10px] px-2 sm:px-3 font-bold text-on-surface-variant uppercase">
               {isSupabaseConfigured ? 'Live Mode' : 'Offline'}
             </span>
             <button className="w-14 h-8 bg-tertiary-fixed rounded-full relative flex items-center border-2 border-on-tertiary-fixed transition-all active:scale-95">
@@ -214,7 +214,7 @@ function App() {
         </div>
 
         {statusMessage && (
-          <div className="bg-yellow-100 border-2 border-yellow-400 rounded-full px-6 py-3 mb-6 text-center font-body text-sm">
+          <div className="bg-yellow-100 border-2 border-yellow-400 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6 text-center font-body text-xs sm:text-sm">
             {statusMessage}
           </div>
         )}
@@ -239,43 +239,43 @@ function App() {
         ) : (
           <>
             {/* Choice Arena */}
-            <div className="flex flex-col md:flex-row gap-6 relative items-center justify-center flex-grow">
+            <div className="flex flex-col lg:flex-row gap-3 sm:gap-6 relative items-center justify-center flex-grow">
               {/* Choice Card A */}
               <button
                 onClick={() => handleVote(1)}
                 disabled={hasVoted}
-                className="w-full md:w-1/2 min-h-[280px] md:h-full bg-surface-container-lowest border-[3px] border-primary-dim rounded-full p-8 flex flex-col items-center justify-center text-center relative group cursor-pointer hover:scale-[1.02] transition-all overflow-hidden disabled:cursor-default disabled:hover:scale-100"
+                className="w-full lg:w-1/2 h-auto min-h-[220px] sm:min-h-[280px] bg-surface-container-lowest border-[3px] border-primary-dim rounded-2xl sm:rounded-full p-4 sm:p-8 flex flex-col items-center justify-center text-center relative group cursor-pointer hover:scale-[1.02] transition-all overflow-hidden disabled:cursor-default disabled:hover:scale-100"
               >
                 <div className="absolute inset-0 comic-texture text-primary opacity-[0.03] pointer-events-none"></div>
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-secondary-container rounded-2xl border-4 border-on-secondary-container shadow-[6px_6px_0px_#000] rotate-[-6deg] mb-6 flex items-center justify-center mx-auto group-hover:rotate-0 transition-transform">
+                <div className="relative z-10 w-full">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-secondary-container rounded-lg sm:rounded-2xl border-2 sm:border-4 border-on-secondary-container shadow-[3px_3px_0px_#000] sm:shadow-[6px_6px_0px_#000] rotate-[-6deg] mb-4 sm:mb-6 flex items-center justify-center mx-auto group-hover:rotate-0 transition-transform">
                     <span 
-                      className="material-symbols-outlined text-on-secondary-container text-3xl"
-                      style={{fontSize: '32px'}}
+                      className="material-symbols-outlined text-on-secondary-container"
+                      style={{fontSize: '24px'}}
                     >
                       {getIconForOption(currentQuestion.option_one)}
                     </span>
                   </div>
-                  <p className="font-headline text-2xl md:text-3xl text-on-surface leading-tight px-4">
+                  <p className="font-headline text-lg sm:text-2xl md:text-3xl text-on-surface leading-tight px-2 sm:px-4">
                     {currentQuestion.option_one}
                   </p>
                 </div>
 
                 {/* Percent Bar (shown when voted) */}
                 {hasVoted && (
-                  <div className="absolute bottom-6 left-0 right-0 px-6 opacity-100 transition-opacity">
-                    <div className="w-full h-3 bg-surface-container-high rounded-full overflow-hidden border-2 border-on-surface">
+                  <div className="absolute bottom-3 sm:bottom-6 left-0 right-0 px-4 sm:px-6 opacity-100 transition-opacity">
+                    <div className="w-full h-2 sm:h-3 bg-surface-container-high rounded-full overflow-hidden border-2 border-on-surface">
                       <div className="h-full bg-secondary-container" style={{ width: `${p1}%` }}></div>
                     </div>
-                    <span className="font-label text-xs mt-2 block font-black text-on-surface">{p1}% AGREE</span>
+                    <span className="font-label text-[9px] sm:text-xs mt-1 sm:mt-2 block font-black text-on-surface">{p1}% AGREE</span>
                   </div>
                 )}
               </button>
 
               {/* VS Badge */}
-              <div className="md:absolute z-20 flex items-center justify-center my-[-2rem] md:my-0">
-                <div className="w-20 h-20 bg-on-background rounded-full border-[6px] border-white flex items-center justify-center shadow-[0_10px_25px_rgba(0,0,0,0.2)] rotate-12">
-                  <span className="font-headline text-3xl text-white italic tracking-tighter">OR</span>
+              <div className="lg:absolute z-20 flex items-center justify-center my-[-1rem] lg:my-0">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-on-background rounded-full border-4 sm:border-[6px] border-white flex items-center justify-center shadow-[0_10px_25px_rgba(0,0,0,0.2)] rotate-12">
+                  <span className="font-headline text-2xl sm:text-3xl text-white italic tracking-tighter">OR</span>
                 </div>
               </div>
 
@@ -283,111 +283,111 @@ function App() {
               <button
                 onClick={() => handleVote(2)}
                 disabled={hasVoted}
-                className="w-full md:w-1/2 min-h-[280px] md:h-full bg-surface-container-lowest border-[3px] border-tertiary-dim rounded-full p-8 flex flex-col items-center justify-center text-center relative group cursor-pointer hover:scale-[1.02] transition-all overflow-hidden disabled:cursor-default disabled:hover:scale-100"
+                className="w-full lg:w-1/2 h-auto min-h-[220px] sm:min-h-[280px] bg-surface-container-lowest border-[3px] border-tertiary-dim rounded-2xl sm:rounded-full p-4 sm:p-8 flex flex-col items-center justify-center text-center relative group cursor-pointer hover:scale-[1.02] transition-all overflow-hidden disabled:cursor-default disabled:hover:scale-100"
               >
                 <div className="absolute inset-0 comic-texture text-tertiary opacity-[0.03] pointer-events-none"></div>
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-tertiary-container rounded-2xl border-4 border-on-tertiary-container shadow-[6px_6px_0px_#000] rotate-[6deg] mb-6 flex items-center justify-center mx-auto group-hover:rotate-0 transition-transform">
+                <div className="relative z-10 w-full">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-tertiary-container rounded-lg sm:rounded-2xl border-2 sm:border-4 border-on-tertiary-container shadow-[3px_3px_0px_#000] sm:shadow-[6px_6px_0px_#000] rotate-[6deg] mb-4 sm:mb-6 flex items-center justify-center mx-auto group-hover:rotate-0 transition-transform">
                     <span 
-                      className="material-symbols-outlined text-on-tertiary-container text-3xl"
-                      style={{fontSize: '32px'}}
+                      className="material-symbols-outlined text-on-tertiary-container"
+                      style={{fontSize: '24px'}}
                     >
                       {getIconForOption(currentQuestion.option_two)}
                     </span>
                   </div>
-                  <p className="font-headline text-2xl md:text-3xl text-on-surface leading-tight px-4">
+                  <p className="font-headline text-lg sm:text-2xl md:text-3xl text-on-surface leading-tight px-2 sm:px-4">
                     {currentQuestion.option_two}
                   </p>
                 </div>
 
                 {/* Percent Bar (shown when voted) */}
                 {hasVoted && (
-                  <div className="absolute bottom-6 left-0 right-0 px-6 opacity-100 transition-opacity">
-                    <div className="w-full h-3 bg-surface-container-high rounded-full overflow-hidden border-2 border-on-surface">
+                  <div className="absolute bottom-3 sm:bottom-6 left-0 right-0 px-4 sm:px-6 opacity-100 transition-opacity">
+                    <div className="w-full h-2 sm:h-3 bg-surface-container-high rounded-full overflow-hidden border-2 border-on-surface">
                       <div className="h-full bg-tertiary-container" style={{ width: `${p2}%` }}></div>
                     </div>
-                    <span className="font-label text-xs mt-2 block font-black text-on-surface">{p2}% AGREE</span>
+                    <span className="font-label text-[9px] sm:text-xs mt-1 sm:mt-2 block font-black text-on-surface">{p2}% AGREE</span>
                   </div>
                 )}
               </button>
             </div>
 
             {/* Next Section */}
-            <div className="mt-10 flex flex-col items-center gap-4">
+            <div className="mt-6 sm:mt-10 flex flex-col items-center gap-2 sm:gap-4">
               {!hasVoted ? (
                 <button
                   onClick={() => pickRandomQuestion(questions)}
-                  className="bg-gradient-to-br from-primary to-primary-container px-12 py-5 rounded-full text-white font-headline text-2xl tracking-wide shadow-[0_15px_30px_rgba(8,70,237,0.4)] border-b-8 border-primary-dim hover:translate-y-[-4px] active:translate-y-[2px] active:border-b-0 transition-all flex items-center gap-3 group"
+                  className="bg-gradient-to-br from-primary to-primary-container px-6 sm:px-12 py-3 sm:py-5 rounded-full text-white font-headline text-lg sm:text-2xl tracking-wide shadow-[0_15px_30px_rgba(8,70,237,0.4)] border-b-4 sm:border-b-8 border-primary-dim hover:translate-y-[-4px] active:translate-y-[2px] active:border-b-0 transition-all flex items-center gap-2 sm:gap-3 group"
                 >
                   SKIP THIS ONE
-                  <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
+                  <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform text-lg sm:text-2xl">arrow_forward</span>
                 </button>
               ) : (
                 <button
                   onClick={() => pickRandomQuestion(questions)}
-                  className="bg-gradient-to-br from-primary to-primary-container px-12 py-5 rounded-full text-white font-headline text-2xl tracking-wide shadow-[0_15px_30px_rgba(8,70,237,0.4)] border-b-8 border-primary-dim hover:translate-y-[-4px] active:translate-y-[2px] active:border-b-0 transition-all flex items-center gap-3 group"
+                  className="bg-gradient-to-br from-primary to-primary-container px-6 sm:px-12 py-3 sm:py-5 rounded-full text-white font-headline text-lg sm:text-2xl tracking-wide shadow-[0_15px_30px_rgba(8,70,237,0.4)] border-b-4 sm:border-b-8 border-primary-dim hover:translate-y-[-4px] active:translate-y-[2px] active:border-b-0 transition-all flex items-center gap-2 sm:gap-3 group"
                 >
                   NEXT QUESTION
-                  <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
+                  <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform text-lg sm:text-2xl">arrow_forward</span>
                 </button>
               )}
-              <p className="font-label text-[10px] text-on-surface-variant/60 tracking-[0.3em]">SCROLL FOR MORE WILD QUESTIONS</p>
+              <p className="font-label text-[9px] sm:text-[10px] text-on-surface-variant/60 tracking-[0.3em]">SCROLL FOR MORE WILD QUESTIONS</p>
             </div>
 
             {/* Doodle Divider */}
-            <div className="mt-20 self-start w-32 h-2 bg-tertiary rounded-full rotate-[-2deg]"></div>
-            <div className="mt-2 self-start w-16 h-2 bg-secondary-container rounded-full rotate-[4deg] ml-4"></div>
+            <div className="mt-12 sm:mt-20 self-start w-28 sm:w-32 h-1.5 sm:h-2 bg-tertiary rounded-full rotate-[-2deg]"></div>
+            <div className="mt-1.5 sm:mt-2 self-start w-12 sm:w-16 h-1.5 sm:h-2 bg-secondary-container rounded-full rotate-[4deg] ml-3 sm:ml-4"></div>
           </>
         )}
       </main>
 
       {/* BottomNavBar */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-4 pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-4 border-blue-600/10 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] rounded-t-[2rem]">
+      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-2 sm:px-4 pb-4 sm:pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-4 border-blue-600/10 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] rounded-t-[1.5rem] sm:rounded-t-[2rem]">
         <a
-          className="flex flex-col items-center justify-center bg-yellow-400 dark:bg-yellow-500 text-blue-900 rounded-2xl px-5 py-2 scale-110 -translate-y-2 border-2 border-blue-900 shadow-[4px_4px_0px_#000] active:scale-90 transition-transform duration-200"
+          className="flex flex-col items-center justify-center bg-yellow-400 dark:bg-yellow-500 text-blue-900 rounded-lg sm:rounded-2xl px-3 sm:px-5 py-1.5 sm:py-2 scale-100 sm:scale-110 -translate-y-1 sm:-translate-y-2 border-2 border-blue-900 shadow-[2px_2px_0px_#000] sm:shadow-[4px_4px_0px_#000] active:scale-90 transition-transform duration-200"
           href="#"
           aria-label="Daily challenges"
         >
-          <span className="material-symbols-outlined" style={{fontSize: '24px', fontVariationSettings: "'FILL' 1"}}>
+          <span className="material-symbols-outlined text-sm sm:text-2xl" style={{fontSize: '20px'}}>
             today
           </span>
-          <span className="font-label font-bold text-[10px] uppercase tracking-widest mt-1">Daily</span>
+          <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">Daily</span>
         </a>
         <a
-          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
+          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-2 sm:px-4 py-1.5 sm:py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
           href="#"
           aria-label="Wild challenges"
         >
-          <span className="material-symbols-outlined" style={{fontSize: '24px'}}>
+          <span className="material-symbols-outlined text-sm sm:text-2xl" style={{fontSize: '20px'}}>
             auto_awesome
           </span>
-          <span className="font-label font-bold text-[10px] uppercase tracking-widest mt-1">Wild</span>
+          <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">Wild</span>
         </a>
         <a
-          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
+          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-2 sm:px-4 py-1.5 sm:py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
           href="#"
           aria-label="School challenges"
         >
-          <span className="material-symbols-outlined" style={{fontSize: '24px'}}>
+          <span className="material-symbols-outlined text-sm sm:text-2xl" style={{fontSize: '20px'}}>
             school
           </span>
-          <span className="font-label font-bold text-[10px] uppercase tracking-widest mt-1">School</span>
+          <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">School</span>
         </a>
         <a
-          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
+          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-2 sm:px-4 py-1.5 sm:py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
           href="#"
           aria-label="Party challenges"
         >
-          <span className="material-symbols-outlined" style={{fontSize: '24px'}}>
+          <span className="material-symbols-outlined text-sm sm:text-2xl" style={{fontSize: '20px'}}>
             celebration
           </span>
-          <span className="font-label font-bold text-[10px] uppercase tracking-widest mt-1">Party</span>
+          <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">Party</span>
         </a>
       </nav>
 
       {/* Floating Doodle Texture Decor */}
-      <div className="fixed top-1/4 right-[-20px] w-40 h-40 border-8 border-tertiary-fixed opacity-10 rounded-full pointer-events-none"></div>
-      <div className="fixed bottom-1/4 left-[-30px] w-60 h-60 border-8 border-primary-container opacity-10 rotate-45 pointer-events-none"></div>
+      <div className="fixed top-1/4 right-[-20px] sm:right-[-40px] w-32 sm:w-40 h-32 sm:h-40 border-4 sm:border-8 border-tertiary-fixed opacity-10 rounded-full pointer-events-none"></div>
+      <div className="fixed bottom-1/4 left-[-30px] sm:left-[-60px] w-48 sm:w-60 h-48 sm:h-60 border-4 sm:border-8 border-primary-container opacity-10 rotate-45 pointer-events-none"></div>
     </div>
   )
 }
