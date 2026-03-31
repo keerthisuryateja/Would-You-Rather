@@ -20,6 +20,38 @@ const DEMO_QUESTION_PAIRS = new Set([
   'never have to sleep||never have to eat',
 ])
 
+const CATEGORY_KEYWORDS = {
+  wild: ['dragon', 'alien', 'superpower', 'magic', 'time', 'future', 'past', 'invisible', 'mind', 'fly', 'pterodactyl'],
+  school: ['school', 'study', 'exam', 'homework', 'teacher', 'college', 'class', 'learn', 'skill', 'language', 'book'],
+  party: ['party', 'dance', 'music', 'dj', 'celebration', 'festival', 'club', 'karaoke', 'friends'],
+}
+
+const CATEGORY_META = {
+  daily: { label: 'Daily', icon: 'today' },
+  wild: { label: 'Wild', icon: 'auto_awesome' },
+  school: { label: 'School', icon: 'school' },
+  party: { label: 'Party', icon: 'celebration' },
+}
+
+const inferCategory = (question) => {
+  const text = `${question.option_one ?? ''} ${question.option_two ?? ''}`.toLowerCase()
+
+  if (CATEGORY_KEYWORDS.wild.some((keyword) => text.includes(keyword))) return 'wild'
+  if (CATEGORY_KEYWORDS.school.some((keyword) => text.includes(keyword))) return 'school'
+  if (CATEGORY_KEYWORDS.party.some((keyword) => text.includes(keyword))) return 'party'
+  return 'daily'
+}
+
+const attachCategory = (question) => ({
+  ...question,
+  category: inferCategory(question),
+})
+
+const filterQuestionsByCategory = (qList, category) => {
+  if (category === 'daily') return qList
+  return qList.filter((item) => item.category === category)
+}
+
 const isDemoQuestion = (q) => {
   const pair = `${(q.option_one ?? '').trim().toLowerCase()}||${(q.option_two ?? '').trim().toLowerCase()}`
   return DEMO_QUESTION_PAIRS.has(pair)
@@ -38,9 +70,12 @@ const getIconForOption = (text) => {
 }
 
 function App() {
+  const [allQuestions, setAllQuestions] = useState([])
   const [questions, setQuestions] = useState([])
   const [currentQuestion, setCurrentQuestion] = useState(null)
   const [hasVoted, setHasVoted] = useState(false)
+  const [liveMode, setLiveMode] = useState(isSupabaseConfigured)
+  const [activeCategory, setActiveCategory] = useState('daily')
   const [loading, setLoading] = useState(true)
   const [statusMessage, setStatusMessage] = useState('')
 
@@ -49,12 +84,38 @@ function App() {
     setHasVoted(false)
   }, [])
 
+  const applyCategoryView = useCallback((sourceQuestions, category, preserveCurrent = false) => {
+    const scoped = filterQuestionsByCategory(sourceQuestions, category)
+    setQuestions(scoped)
+
+    if (scoped.length === 0) {
+      setCurrentQuestion(null)
+      setHasVoted(false)
+      if (!loading) {
+        const categoryLabel = CATEGORY_META[category].label
+        setStatusMessage(`No ${categoryLabel} questions found. Add more rows or choose another tab.`)
+      }
+      return
+    }
+
+    if (preserveCurrent) {
+      setCurrentQuestion((prev) => {
+        const preserved = scoped.find((item) => item.id === prev?.id)
+        return preserved ?? getRandomQuestion(scoped)
+      })
+    } else {
+      setCurrentQuestion((prev) => getRandomQuestion(scoped, prev?.id ?? -1))
+      setHasVoted(false)
+    }
+  }, [loading])
+
   const fetchQuestions = useCallback(async (options = { preserveCurrent: false }) => {
     const { preserveCurrent } = options
     setLoading(true)
     setStatusMessage('')
 
     if (!isSupabaseConfigured) {
+      setAllQuestions([])
       setQuestions([])
       setCurrentQuestion(null)
       setLoading(false)
@@ -69,6 +130,7 @@ function App() {
         .order('id', { ascending: true })
 
       if (error || !data || data.length === 0) {
+        setAllQuestions([])
         setQuestions([])
         setCurrentQuestion(null)
         setStatusMessage('No questions found in Supabase table questions.')
@@ -77,35 +139,46 @@ function App() {
         const liveQuestions = normalized.filter((item) => !isDemoQuestion(item))
 
         if (liveQuestions.length === 0) {
+          setAllQuestions([])
           setQuestions([])
           setCurrentQuestion(null)
           setStatusMessage('Only demo rows were found in Supabase. Replace seeded rows with your own questions.')
           return
         }
 
-        setQuestions(liveQuestions)
-        if (preserveCurrent) {
-          setCurrentQuestion((prev) => {
-            const preserved = liveQuestions.find((item) => item.id === prev?.id)
-            return preserved ?? getRandomQuestion(liveQuestions)
-          })
-        } else {
-          pickRandomQuestion(liveQuestions)
-        }
+        const categorized = liveQuestions.map(attachCategory)
+        setAllQuestions(categorized)
+        applyCategoryView(categorized, activeCategory, preserveCurrent)
       }
     } catch (err) {
       console.error('Could not fetch questions.', err)
+      setAllQuestions([])
       setQuestions([])
       setCurrentQuestion(null)
       setStatusMessage('Could not reach Supabase. Check URL, key, and table permissions.')
     } finally {
       setLoading(false)
     }
-  }, [pickRandomQuestion])
+  }, [activeCategory, applyCategoryView])
 
   useEffect(() => {
     fetchQuestions()
   }, [fetchQuestions])
+
+  useEffect(() => {
+    if (allQuestions.length > 0 && !loading) {
+      applyCategoryView(allQuestions, activeCategory, true)
+    }
+  }, [activeCategory, allQuestions, applyCategoryView, loading])
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return
+    if (liveMode) {
+      setStatusMessage('')
+      return
+    }
+    setStatusMessage('Live mode is off. Votes are local until you turn live mode back on.')
+  }, [liveMode])
 
   const handleVote = async (option) => {
     if (!currentQuestion || hasVoted) return
@@ -122,7 +195,7 @@ function App() {
 
     // Update real database if configured
     try {
-      if (isSupabaseConfigured) {
+      if (isSupabaseConfigured && liveMode) {
         const column = option === 1 ? 'votes_one' : 'votes_two'
         const { error: rpcError } = await supabase.rpc('increment_vote', {
           row_id: currentQuestion.id,
@@ -149,6 +222,7 @@ function App() {
         const normalizedLatest = normalizeQuestion(latestQuestion)
         setCurrentQuestion(normalizedLatest)
         setQuestions((prev) => prev.map((q) => (q.id === normalizedLatest.id ? normalizedLatest : q)))
+        setAllQuestions((prev) => prev.map((q) => (q.id === normalizedLatest.id ? { ...q, ...normalizedLatest } : q)))
       }
     } catch (e) {
       console.error('Vote update failed', e)
@@ -203,10 +277,25 @@ function App() {
           </div>
           <div className="flex items-center gap-3 bg-surface-container-high p-1.5 rounded-full border-2 border-on-surface/5">
             <span className="font-label text-[10px] px-2 sm:px-3 font-bold text-on-surface-variant uppercase">
-              {isSupabaseConfigured ? 'Live Mode' : 'Offline'}
+              {liveMode ? 'Live Mode' : 'Offline'}
             </span>
-            <button className="w-14 h-8 bg-tertiary-fixed rounded-full relative flex items-center border-2 border-on-tertiary-fixed transition-all active:scale-95">
-              <div className="w-6 h-6 bg-white rounded-full ml-1 shadow-sm flex items-center justify-center">
+            <button
+              onClick={() => {
+                if (!isSupabaseConfigured) {
+                  setStatusMessage('Supabase is not configured, so live mode cannot be enabled.')
+                  return
+                }
+                setLiveMode((prev) => !prev)
+              }}
+              type="button"
+              aria-pressed={liveMode}
+              className={`w-14 h-8 rounded-full relative flex items-center border-2 transition-all active:scale-95 ${
+                liveMode
+                  ? 'bg-tertiary-fixed border-on-tertiary-fixed justify-start'
+                  : 'bg-surface-container border-outline-variant justify-end'
+              }`}
+            >
+              <div className="w-6 h-6 bg-white rounded-full mx-1 shadow-sm flex items-center justify-center">
                 <div className="w-2 h-2 bg-tertiary rounded-full animate-pulse"></div>
               </div>
             </button>
@@ -331,7 +420,9 @@ function App() {
                   <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform text-lg sm:text-2xl">arrow_forward</span>
                 </button>
               )}
-              <p className="font-label text-[9px] sm:text-[10px] text-on-surface-variant/60 tracking-[0.3em]">SCROLL FOR MORE WILD QUESTIONS</p>
+              <p className="font-label text-[9px] sm:text-[10px] text-on-surface-variant/60 tracking-[0.3em]">
+                {`SCROLL FOR MORE ${CATEGORY_META[activeCategory].label.toUpperCase()} QUESTIONS`}
+              </p>
             </div>
 
             {/* Doodle Divider */}
@@ -343,46 +434,25 @@ function App() {
 
       {/* BottomNavBar */}
       <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-2 sm:px-4 pb-4 sm:pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-4 border-blue-600/10 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] rounded-t-[1.5rem] sm:rounded-t-[2rem]">
-        <a
-          className="flex flex-col items-center justify-center bg-yellow-400 dark:bg-yellow-500 text-blue-900 rounded-lg sm:rounded-2xl px-3 sm:px-5 py-1.5 sm:py-2 scale-100 sm:scale-110 -translate-y-1 sm:-translate-y-2 border-2 border-blue-900 shadow-[2px_2px_0px_#000] sm:shadow-[4px_4px_0px_#000] active:scale-90 transition-transform duration-200"
-          href="#"
-          aria-label="Daily challenges"
-        >
-          <span className="material-symbols-outlined text-sm sm:text-2xl" style={{fontSize: '20px'}}>
-            today
-          </span>
-          <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">Daily</span>
-        </a>
-        <a
-          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-2 sm:px-4 py-1.5 sm:py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
-          href="#"
-          aria-label="Wild challenges"
-        >
-          <span className="material-symbols-outlined text-sm sm:text-2xl" style={{fontSize: '20px'}}>
-            auto_awesome
-          </span>
-          <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">Wild</span>
-        </a>
-        <a
-          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-2 sm:px-4 py-1.5 sm:py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
-          href="#"
-          aria-label="School challenges"
-        >
-          <span className="material-symbols-outlined text-sm sm:text-2xl" style={{fontSize: '20px'}}>
-            school
-          </span>
-          <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">School</span>
-        </a>
-        <a
-          className="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-2 sm:px-4 py-1.5 sm:py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200"
-          href="#"
-          aria-label="Party challenges"
-        >
-          <span className="material-symbols-outlined text-sm sm:text-2xl" style={{fontSize: '20px'}}>
-            celebration
-          </span>
-          <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">Party</span>
-        </a>
+        {Object.entries(CATEGORY_META).map(([key, meta]) => {
+          const isActive = activeCategory === key
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setActiveCategory(key)}
+              aria-label={`${meta.label} challenges`}
+              className={isActive
+                ? 'flex flex-col items-center justify-center bg-yellow-400 dark:bg-yellow-500 text-blue-900 rounded-lg sm:rounded-2xl px-3 sm:px-5 py-1.5 sm:py-2 scale-100 sm:scale-110 -translate-y-1 sm:-translate-y-2 border-2 border-blue-900 shadow-[2px_2px_0px_#000] sm:shadow-[4px_4px_0px_#000] active:scale-90 transition-transform duration-200'
+                : 'flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-2 sm:px-4 py-1.5 sm:py-2 opacity-70 hover:opacity-100 hover:text-blue-600 transition-all active:scale-90 duration-200'}
+            >
+              <span className="material-symbols-outlined text-sm sm:text-2xl" style={{ fontSize: '20px' }}>
+                {meta.icon}
+              </span>
+              <span className="font-label font-bold text-[8px] sm:text-[10px] uppercase tracking-widest mt-0.5">{meta.label}</span>
+            </button>
+          )
+        })}
       </nav>
 
       {/* Floating Doodle Texture Decor */}
