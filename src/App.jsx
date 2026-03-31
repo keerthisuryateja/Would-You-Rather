@@ -84,7 +84,19 @@ function App() {
     try {
       if (isSupabaseConfigured) {
         const column = option === 1 ? 'votes_one' : 'votes_two'
-        await supabase.rpc('increment_vote', { row_id: currentQuestion.id, col_name: column })
+        const { error: rpcError } = await supabase.rpc('increment_vote', {
+          row_id: currentQuestion.id,
+          col_name: column,
+        })
+
+        if (rpcError) {
+          const { error: updateError } = await supabase
+            .from('questions')
+            .update({ [column]: updatedQuestion[column] })
+            .eq('id', currentQuestion.id)
+
+          if (updateError) throw updateError
+        }
       }
     } catch (e) {
       console.error('Vote update failed', e)

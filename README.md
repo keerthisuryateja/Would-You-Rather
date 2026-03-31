@@ -56,6 +56,7 @@ Deployment runs from `.github/workflows/deploy.yml`.
 
 - Pull requests to `main` run CI only.
 - Pushes to `main` run CI, then deploy to Pages.
+- Workflow build injects `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` so deployed Pages uses live Supabase data.
 
 Repository Pages should be configured as:
 
