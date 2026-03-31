@@ -9,6 +9,12 @@ const FALLBACK_QUESTIONS = [
   { id: 4, option_one: 'Read minds', option_two: 'Be invisible', votes_one: 310, votes_two: 290 },
 ]
 
+const getRandomQuestion = (qList, excludeId = -1) => {
+  let nextQuestions = qList.filter((q) => q.id !== excludeId)
+  if (nextQuestions.length === 0) nextQuestions = qList
+  return nextQuestions[Math.floor(Math.random() * nextQuestions.length)]
+}
+
 function App() {
   const [questions, setQuestions] = useState([])
   const [currentQuestion, setCurrentQuestion] = useState(null)
@@ -18,16 +24,10 @@ function App() {
   const [statusMessage, setStatusMessage] = useState('')
 
   const pickRandomQuestion = useCallback((qList) => {
-    const minId = currentQuestion ? currentQuestion.id : -1
-    let nextQuestions = qList.filter((q) => q.id !== minId)
-    // If we run out, just use all
-    if (nextQuestions.length === 0) nextQuestions = qList
-
-    const random = nextQuestions[Math.floor(Math.random() * nextQuestions.length)]
-    setCurrentQuestion(random)
+    setCurrentQuestion((prev) => getRandomQuestion(qList, prev?.id ?? -1))
     setHasVoted(false)
     setView('voting')
-  }, [currentQuestion])
+  }, [])
 
   const fetchQuestions = useCallback(async () => {
     setLoading(true)
