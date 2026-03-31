@@ -42,13 +42,11 @@ function App() {
   const [currentQuestion, setCurrentQuestion] = useState(null)
   const [hasVoted, setHasVoted] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [view, setView] = useState('voting')
   const [statusMessage, setStatusMessage] = useState('')
 
   const pickRandomQuestion = useCallback((qList) => {
     setCurrentQuestion((prev) => getRandomQuestion(qList, prev?.id ?? -1))
     setHasVoted(false)
-    setView('voting')
   }, [])
 
   const fetchQuestions = useCallback(async (options = { preserveCurrent: false }) => {
@@ -113,7 +111,6 @@ function App() {
     if (!currentQuestion || hasVoted) return
 
     setHasVoted(true)
-    setView('results')
 
     // Optimistic UI update
     const updatedQuestion = { ...currentQuestion }
@@ -159,16 +156,12 @@ function App() {
     }
   }
 
-  const getTotalVotes = (q) => (q.votes_one ?? 0) + (q.votes_two ?? 0)
-  const getPercentage = (votes, total) => (total === 0 ? 0 : Math.round((votes / total) * 100))
-
-  const { totalVotes, p1, p2 } = useMemo(() => {
+  const { p1, p2 } = useMemo(() => {
     const votes = currentQuestion ? currentQuestion.votes_one + currentQuestion.votes_two : 0
     const optionOnePercent = votes === 0 ? 50 : Math.round(((currentQuestion?.votes_one ?? 0) / votes) * 100)
     const optionTwoPercent = votes === 0 ? 50 : Math.round(((currentQuestion?.votes_two ?? 0) / votes) * 100)
 
     return {
-      totalVotes: votes,
       p1: optionOnePercent,
       p2: optionTwoPercent,
     }
