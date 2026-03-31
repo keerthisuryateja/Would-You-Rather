@@ -91,10 +91,8 @@ function App() {
     if (scoped.length === 0) {
       setCurrentQuestion(null)
       setHasVoted(false)
-      if (!loading) {
-        const categoryLabel = CATEGORY_META[category].label
-        setStatusMessage(`No ${categoryLabel} questions found. Add more rows or choose another tab.`)
-      }
+      const categoryLabel = CATEGORY_META[category].label
+      setStatusMessage(`No ${categoryLabel} questions found. Add more rows or choose another tab.`)
       return
     }
 
@@ -107,7 +105,7 @@ function App() {
       setCurrentQuestion((prev) => getRandomQuestion(scoped, prev?.id ?? -1))
       setHasVoted(false)
     }
-  }, [loading])
+  }, [])
 
   const fetchQuestions = useCallback(async (options = { preserveCurrent: false }) => {
     const { preserveCurrent } = options
