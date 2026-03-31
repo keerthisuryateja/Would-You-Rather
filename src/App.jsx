@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { isSupabaseConfigured, supabase } from './supabaseClient'
+import brandLogo from './assets/would_you_rather_logo.png'
 import './App.css'
 
 const FALLBACK_QUESTIONS = [
@@ -106,6 +107,7 @@ function App() {
   return (
     <div className="app-container">
       <div className="header">
+        <img className="brand-logo" src={brandLogo} alt="Would You Rather logo" />
         <h1><span className="title-gradient">Would You</span> Rather?</h1>
         <p>Make your choice and see what the world thinks!</p>
         {statusMessage ? <p className="status-message">{statusMessage}</p> : null}
